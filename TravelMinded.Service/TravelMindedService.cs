@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using Experience.Models;
+using System.Collections.Generic;
 using System.Linq;
+using Travel.Models;
 using TravelMinded.Service.DAL;
 
 namespace TravelMinded.Service
@@ -13,10 +14,11 @@ namespace TravelMinded.Service
         {
             dbContext = travelMindedContext;
             Mapper.Initialize(cfg => cfg.CreateMap<DAL.DbModel.Company, Company>());
+            Mapper.Initialize(cfg => cfg.CreateMap<List<DAL.DbModel.Experience>, List<Experience>>());
         }
 
 
-        public Company GetCompany()
+        public ICompany GetCompany()
         {
             var company = new Company();
 
@@ -29,5 +31,22 @@ namespace TravelMinded.Service
 
             return company;
         }
+
+
+
+        public IList<IExperience> GetExperiences()
+        {
+            var experiences = new List<Experience>();
+
+            var dbExperiences = dbContext.Experiences.ToList();
+
+            if (dbExperiences != null)
+            {
+                experiences = Mapper.Map<List<Experience>>(dbExperiences);
+            }
+
+            return experiences as IList<IExperience>;
+        }
+
     }
 }

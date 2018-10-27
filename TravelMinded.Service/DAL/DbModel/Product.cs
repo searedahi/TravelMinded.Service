@@ -2,8 +2,9 @@
 {
     public class Product : BaseDbModel
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string ShortName { get; set; }
-        public string Currency { get; set; }
         public Company Company { get; set; }
     }
 }

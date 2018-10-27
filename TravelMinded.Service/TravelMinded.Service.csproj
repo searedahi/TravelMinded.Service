@@ -2,12 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\FareHarborService\FareHarborService\FareHarborService.csproj" />
-    <ProjectReference Include="..\..\Travel.Models\Travel.Models\Travel.Models.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
@@ -21,6 +17,11 @@
 
   <ItemGroup>
     <Folder Include="Subs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\FareHarborService\FareHarborService\FareHarborService.csproj" />
+    <ProjectReference Include="..\..\Travel.Models\Travel.Models\Travel.Models.csproj" />
   </ItemGroup>
 
 </Project>

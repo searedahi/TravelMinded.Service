@@ -12,8 +12,8 @@ namespace TravelMinded.Service.DAL
             optionsBuilder.UseSqlServer(@"Server=.\;Database=TravelMinded;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
 
-        public DbSet<DbModel.Company> Companies { get; set; }
-        public DbSet<DbModel.Product> Products { get; set; }
-        public DbSet<DbModel.Experience> Experiences { get; set; }
+        public DbSet<DbModel.Company> Company { get; set; }
+        public DbSet<DbModel.Product> Product { get; set; }
+        public DbSet<DbModel.Experience> Experience { get; set; }
     }
 }
