@@ -24,6 +24,8 @@ namespace TravelMinded.Service.DAL.DbModel
         public string CancellationPolicySafeHtml { get; set; }
         public string ImageCdnUrl { get; set; }
         public bool IsPickupEverOffered { get; set; }
+        public decimal TaxPercentage { get; set; }
+
         [NotMapped]
         public ICollection<string> DescriptionBullets { get; set; }
         public ICollection<CustomerPrototype> CustomerPrototypes { get; set; }

@@ -10,6 +10,7 @@ namespace TravelMinded.Service.DAL.DbModel
         public string Currency { get; set; }
         public string Location { get; set; }
         public bool IsFareHarborVendor { get; set; }
+        public AddressInfo Address { get; set; }
 
         public ICollection<Experience> Experiences { get; set; }
         public ICollection<Product> Products { get; set; }
