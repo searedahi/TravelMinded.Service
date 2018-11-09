@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelMinded.Service.DAL;
 
 namespace TravelMinded.Service.Migrations
 {
     [DbContext(typeof(TravelMindedContext))]
-    partial class TravelMindedContextModelSnapshot : ModelSnapshot
+    [Migration("20181028215409_taxPctAddToExperience")]
+    partial class taxPctAddToExperience
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
