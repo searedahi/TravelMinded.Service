@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using Travel.Models;
@@ -9,12 +10,12 @@ namespace TravelMinded.Service
     public class TravelMindedService
     {
         private TravelMindedContext dbContext;
+        private IMapper mapper;
 
         public TravelMindedService(TravelMindedContext travelMindedContext)
         {
             dbContext = travelMindedContext;
-            Mapper.Initialize(cfg => cfg.CreateMap<DAL.DbModel.Company, Company>());
-            Mapper.Initialize(cfg => cfg.CreateMap<List<DAL.DbModel.Experience>, List<Experience>>());
+            mapper = new Mapper(TravelMindedMapperFactory.MapperConfig());
         }
 
 
@@ -26,7 +27,7 @@ namespace TravelMinded.Service
 
             if (dbCompany != null)
             {
-                company = Mapper.Map<Company>(dbCompany);
+                company = mapper.Map<Company>(dbCompany);
             }
 
             return company;
@@ -36,16 +37,22 @@ namespace TravelMinded.Service
 
         public IList<IExperience> GetExperiences()
         {
-            var experiences = new List<Experience>();
+            IList<IExperience> experiences = new List<IExperience>();
 
-            var dbExperiences = dbContext.Experiences.ToList();
+            var dbExperiences = dbContext.Experiences.Include(e=> e.Company).Include(e=>e.Availabilities).ToList();
 
             if (dbExperiences != null)
             {
-                experiences = Mapper.Map<List<Experience>>(dbExperiences);
+
+                foreach (var experience in dbExperiences)
+                {
+                    var expMap = mapper.Map<Experience>(experience);
+                    experiences.Add(expMap);
+                }
+                //experiences = mapper.Map<List<Experience>>(dbExperiences);
             }
 
-            return experiences as IList<IExperience>;
+            return experiences.OrderBy(e => e.NextAvailableDate).ToList();
         }
 
     }

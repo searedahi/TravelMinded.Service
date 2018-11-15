@@ -32,5 +32,7 @@ namespace TravelMinded.Service.DAL.DbModel
         public ICollection<ImageInfo> Images { get; set; }
         public ICollection<LocationInfo> Locations { get; set; }
 
+        public virtual ICollection<Availability> Availabilities { get; set; }
+
     }
 }

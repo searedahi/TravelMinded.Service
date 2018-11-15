@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Travel.Models;
@@ -108,5 +109,65 @@ namespace TravelMinded.Service.DAL
             return recordsSaved;
 
         }
+
+        public int SeedAvailabilitiesFromFareHarbor()
+        {
+            var tmContext = new TravelMindedContext();
+
+            if (tmContext.Availabilities.Any())
+            {
+                foreach (var available in tmContext.Availabilities.ToList())
+                {
+                    tmContext.Availabilities.Remove(available);
+                }
+                var recCount = tmContext.SaveChanges();
+                //throw new Exception("There are already experiences in the database.");
+            }
+
+            var fareHarborSvc = FareHarborService.FareHarborRestServiceFactory.CreateFareHarborRestService();
+
+            var companies = tmContext.Companies.Where(c => c.IsFareHarborVendor).ToList();
+
+            var allExperiences = new List<IExperience>();
+            var recordsSaved = 0;
+
+            foreach (var company in companies)
+            {
+                var companyExperiences = tmContext.Experiences.Where(e => e.Company.Equals(company)).ToList();
+
+                foreach (var companyExperience in companyExperiences)
+                {
+                    var availabilities = new List<IAvailability>();
+
+                    var items = new List<IAvailability>();
+
+                    DateTime targetDt = DateTime.Now;
+
+                    while (targetDt < DateTime.Now.AddDays(30))
+                    {
+                        var expAvailabilities = fareHarborSvc.GetExperienceAvailabilities(company.ShortName, companyExperience.Pk, targetDt);
+                        if (expAvailabilities.Any())
+                        {
+                            foreach (var fhExp in expAvailabilities)
+                            {
+                                var dbAvailability = mapper.Map<DbModel.Availability>(fhExp);
+                                dbAvailability.Experience = companyExperience;
+
+                                tmContext.Availabilities.Add(dbAvailability);
+                            }
+                        }
+
+                        targetDt = targetDt.AddDays(1);
+                    }
+
+                    recordsSaved += tmContext.SaveChanges();
+
+                }
+            }
+
+            return recordsSaved;
+
+        }
+
     }
 }
