@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Travel.Models;
@@ -39,13 +40,23 @@ namespace TravelMinded.Service
         {
             IList<IExperience> experiences = new List<IExperience>();
 
-            var dbExperiences = dbContext.Experiences.Include(e=> e.Company).Include(e=>e.Availabilities).ToList();
+            var dbExperiences = dbContext.Experiences
+                .Include(e => e.Company)
+                .Include(e => e.Images)
+                .ToList();
+
 
             if (dbExperiences != null)
             {
-
                 foreach (var experience in dbExperiences)
                 {
+                    var futureAvailabilities = dbContext.Availabilities
+                        .Where(a => experience.Id.Equals(a.Experience.Id)
+                            && DateTime.Parse(a.StartAt) > DateTime.Now)
+                        .ToList();
+
+                    experience.Availabilities = futureAvailabilities;
+
                     var expMap = mapper.Map<Experience>(experience);
                     experiences.Add(expMap);
                 }
@@ -53,6 +64,30 @@ namespace TravelMinded.Service
             }
 
             return experiences.OrderBy(e => e.NextAvailableDate).ToList();
+        }
+
+        public IExperience GetExperience(int experienceId)
+        {
+            IExperience experience = new Experience();
+
+            var dbExp = dbContext.Experiences
+                .Include(e => e.Company)
+                .Include(e => e.Images)
+                .FirstOrDefault(e => e.Id.Equals(experienceId));
+
+            if (dbExp != null)
+            {
+                var futureAvailabilities = dbContext.Availabilities
+                        .Where(a => experience.Id.Equals(a.Experience.Id)
+                            && DateTime.Parse(a.StartAt) > DateTime.Now)
+                    .ToList();
+
+                dbExp.Availabilities = futureAvailabilities;
+
+                experience = mapper.Map<Experience>(dbExp);
+            }
+
+            return experience;
         }
 
     }
