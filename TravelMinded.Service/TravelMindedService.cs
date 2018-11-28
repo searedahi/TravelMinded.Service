@@ -62,7 +62,9 @@ namespace TravelMinded.Service
                 }
             }
 
-            return experiences.OrderBy(e => e.NextAvailableDate).ToList();
+            var orderedExperiences = experiences.OrderBy(e => e.NextAvailableDate).ToList();
+
+            return orderedExperiences;
         }
 
         public IExperience GetExperience(int experienceId)
