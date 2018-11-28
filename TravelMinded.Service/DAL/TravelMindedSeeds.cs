@@ -114,15 +114,15 @@ namespace TravelMinded.Service.DAL
         {
             var tmContext = new TravelMindedContext();
 
-            if (tmContext.Availabilities.Any())
-            {
-                foreach (var available in tmContext.Availabilities.ToList())
-                {
-                    tmContext.Availabilities.Remove(available);
-                }
-                var recCount = tmContext.SaveChanges();
-                //throw new Exception("There are already experiences in the database.");
-            }
+            //if (tmContext.Availabilities.Any())
+            //{
+            //    foreach (var available in tmContext.Availabilities.ToList())
+            //    {
+            //        tmContext.Availabilities.Remove(available);
+            //    }
+            //    var recCount = tmContext.SaveChanges();
+            //    //throw new Exception("There are already experiences in the database.");
+            //}
 
             var fareHarborSvc = FareHarborService.FareHarborRestServiceFactory.CreateFareHarborRestService();
 

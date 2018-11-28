@@ -45,14 +45,14 @@ namespace TravelMinded.Service
                 .Include(e => e.Images)
                 .ToList();
 
-
             if (dbExperiences != null)
             {
                 foreach (var experience in dbExperiences)
                 {
                     var futureAvailabilities = dbContext.Availabilities
                         .Where(a => experience.Id.Equals(a.Experience.Id)
-                            && DateTime.Parse(a.StartAt) > DateTime.Now)
+                                    && DateTime.Parse(a.StartAt) > DateTime.Now
+                            )
                         .ToList();
 
                     experience.Availabilities = futureAvailabilities;
@@ -60,7 +60,6 @@ namespace TravelMinded.Service
                     var expMap = mapper.Map<Experience>(experience);
                     experiences.Add(expMap);
                 }
-                //experiences = mapper.Map<List<Experience>>(dbExperiences);
             }
 
             return experiences.OrderBy(e => e.NextAvailableDate).ToList();
@@ -73,16 +72,20 @@ namespace TravelMinded.Service
             var dbExp = dbContext.Experiences
                 .Include(e => e.Company)
                 .Include(e => e.Images)
+                .Include(e => e.Availabilities)
+                .Include("Availabilities.CustomerTypeRates")
+                .Include(e=>e.CustomerPrototypes)
+
                 .FirstOrDefault(e => e.Id.Equals(experienceId));
 
             if (dbExp != null)
             {
-                var futureAvailabilities = dbContext.Availabilities
-                        .Where(a => experience.Id.Equals(a.Experience.Id)
-                            && DateTime.Parse(a.StartAt) > DateTime.Now)
-                    .ToList();
+                var pastAvailabilities = dbExp.Availabilities.Where(a => DateTime.Parse(a.StartAt) < DateTime.Now).ToList();
 
-                dbExp.Availabilities = futureAvailabilities;
+                foreach (var avail in pastAvailabilities)
+                {
+                    dbExp.Availabilities.Remove(avail);
+                }
 
                 experience = mapper.Map<Experience>(dbExp);
             }
