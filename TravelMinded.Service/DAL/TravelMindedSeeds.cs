@@ -148,6 +148,19 @@ namespace TravelMinded.Service.DAL
                         var expAvailabilities = fareHarborSvc.GetExperienceAvailabilities(company.ShortName, companyExperience.Pk, targetDt);
                         if (expAvailabilities.Any())
                         {
+                            //Check the experience duration, make sure its set
+                            // use the first availablility as needed.
+                            if (companyExperience.Duration == 0)
+                            {
+                                var firstAvail = expAvailabilities.FirstOrDefault();
+
+                                var parsedStart = DateTime.Parse(firstAvail.StartAt);
+                                var parsedEnd = DateTime.Parse(firstAvail.EndAt);
+
+                                var duration = parsedEnd - parsedStart;
+                                companyExperience.Duration = Convert.ToInt32(duration.TotalMinutes);
+                            }
+
                             foreach (var fhExp in expAvailabilities)
                             {
                                 var dbAvailability = mapper.Map<DbModel.Availability>(fhExp);
