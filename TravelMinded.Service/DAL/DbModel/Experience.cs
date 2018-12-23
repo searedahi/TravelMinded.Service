@@ -34,5 +34,7 @@ namespace TravelMinded.Service.DAL.DbModel
 
         public virtual ICollection<Availability> Availabilities { get; set; }
 
+        public virtual ICollection<Tag> Tags { get; set; }
+
     }
 }

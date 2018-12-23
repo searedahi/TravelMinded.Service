@@ -16,6 +16,7 @@ namespace TravelMinded.Service.DAL
         public DbSet<DbModel.Product> Products { get; set; }
         public DbSet<DbModel.Experience> Experiences { get; set; }
         public DbSet<DbModel.Availability> Availabilities { get; set; }
+        public DbSet<DbModel.Tag> Tags { get; set; }
 
     }
 }

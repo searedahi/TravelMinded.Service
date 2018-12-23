@@ -14,5 +14,7 @@ namespace TravelMinded.Service.DAL.DbModel
 
         public ICollection<Experience> Experiences { get; set; }
         public ICollection<Product> Products { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
+
     }
 }
