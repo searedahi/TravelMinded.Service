@@ -34,5 +34,28 @@ namespace TravelMinded.Service.Test
 
             Assert.IsTrue(records > 0);
         }
+
+
+
+
+
+
+
+        [TestMethod]
+        public void TestTheAllSeeds()
+        {
+            var seeder = new TravelMinded.Service.DAL.TravelMindedSeeds();
+
+            var companies = seeder.SeedCompaniesFromFareHarbor();
+
+            var experiences = seeder.SeedExperiencesFromFareHarbor();
+
+            var availablilties = seeder.SeedAvailabilitiesFromFareHarbor();
+
+            Assert.IsTrue(companies > 0);
+            Assert.IsTrue(experiences> 0);
+            Assert.IsTrue(availablilties > 0);
+        }
+
     }
 }

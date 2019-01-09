@@ -12,8 +12,8 @@ namespace TravelMinded.Service.DAL.DbModel
         public bool IsFareHarborVendor { get; set; }
         public AddressInfo Address { get; set; }
 
-        public ICollection<Experience> Experiences { get; set; }
-        public ICollection<Product> Products { get; set; }
+        public virtual ICollection<Experience> Experiences { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
 
     }

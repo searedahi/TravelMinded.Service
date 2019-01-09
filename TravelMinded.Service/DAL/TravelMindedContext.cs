@@ -4,7 +4,7 @@ namespace TravelMinded.Service.DAL
 {
     public class TravelMindedContext : DbContext
     {
-        public TravelMindedContext() 
+        public TravelMindedContext()
             : base() { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -17,6 +17,8 @@ namespace TravelMinded.Service.DAL
         public DbSet<DbModel.Experience> Experiences { get; set; }
         public DbSet<DbModel.Availability> Availabilities { get; set; }
         public DbSet<DbModel.Tag> Tags { get; set; }
+
+        public DbSet<DbModel.ProTip> ProTips { get; set; }
 
     }
 }
