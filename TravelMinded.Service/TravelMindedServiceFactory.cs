@@ -2,11 +2,11 @@
 {
     public static class TravelMindedServiceFactory
     {
-        public static TravelMindedService CreateTravelMindedService()
+        public static TravelMindedRepository CreateTravelMindedService()
         {
             //var dbOptions = new DbContextOptions<DAL.TravelMindedContext>();            
             var dbContext = new DAL.TravelMindedContext();
-            var tmService = new TravelMindedService(dbContext);
+            var tmService = new TravelMindedRepository(dbContext);
             return tmService;
         }
 

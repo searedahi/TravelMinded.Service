@@ -8,12 +8,12 @@ using TravelMinded.Service.DAL;
 
 namespace TravelMinded.Service
 {
-    public class TravelMindedService
+    public class TravelMindedRepository : ITravelMindedRepository
     {
         private TravelMindedContext dbContext;
         private IMapper mapper;
 
-        public TravelMindedService(TravelMindedContext travelMindedContext)
+        public TravelMindedRepository(TravelMindedContext travelMindedContext)
         {
             dbContext = travelMindedContext;
             mapper = new Mapper(TravelMindedMapperFactory.MapperConfig());
@@ -77,6 +77,7 @@ namespace TravelMinded.Service
                 .Include(e => e.Availabilities)
                 .Include("Availabilities.CustomerTypeRates")
                 .Include(e=>e.CustomerPrototypes)
+                .Include(e => e.ProTips)
 
                 .FirstOrDefault(e => e.Id.Equals(experienceId));
 
