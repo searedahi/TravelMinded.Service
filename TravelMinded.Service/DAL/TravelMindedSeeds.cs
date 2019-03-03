@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Travel.Models;
 
 namespace TravelMinded.Service.DAL
@@ -92,18 +93,38 @@ namespace TravelMinded.Service.DAL
 
             var allExperiences = new List<IExperience>();
 
-            foreach (var company in companies)
+            var dbList = new List<DbModel.Experience>();
+
+
+            Parallel.ForEach(companies, co =>
             {
-                var fareHarborExperiences = fareHarborSvc.GetComanyItems(company.ShortName);
 
-                foreach (var companyExperience in fareHarborExperiences)
+                var fareHarborExperiences = fareHarborSvc.GetComanyItems(co.ShortName);
+
+                Parallel.ForEach(fareHarborExperiences, fa =>
                 {
-                    var dbExperience = mapper.Map<DbModel.Experience>(companyExperience);
-                    dbExperience.Company = company;
+                    var dbExperience = mapper.Map<DbModel.Experience>(fa);
+                    dbExperience.Company = co;
 
-                    tmContext.Experiences.Add(dbExperience);
-                }
-            }
+                    dbList.Add(dbExperience);
+                });
+
+            });
+
+                tmContext.Experiences.AddRange(dbList);
+
+            //foreach (var company in companies)
+            //{
+            //    var fareHarborExperiences = fareHarborSvc.GetComanyItems(company.ShortName);
+
+            //    foreach (var companyExperience in fareHarborExperiences)
+            //    {
+            //        var dbExperience = mapper.Map<DbModel.Experience>(companyExperience);
+            //        dbExperience.Company = company;
+
+            //        tmContext.Experiences.Add(dbExperience);
+            //    }
+            //}
 
             var recordsSaved = tmContext.SaveChanges();
             return recordsSaved;
@@ -131,11 +152,15 @@ namespace TravelMinded.Service.DAL
             var allExperiences = new List<IExperience>();
             var recordsSaved = 0;
 
-            foreach (var company in companies)
+            Parallel.ForEach(companies, co =>
             {
-                var companyExperiences = tmContext.Experiences.Where(e => e.Company.Equals(company)).ToList();
+                var companyContext = new TravelMindedContext();
 
-                foreach (var companyExperience in companyExperiences)
+                var companyExperiences = companyContext.Experiences.Where(e => e.Company.Equals(co)).ToList();
+
+                var dbAvailList = new List<DbModel.Availability>();
+
+                Parallel.ForEach(companyExperiences, companyExperience =>
                 {
                     var availabilities = new List<IAvailability>();
 
@@ -145,10 +170,10 @@ namespace TravelMinded.Service.DAL
 
                     while (targetDt < DateTime.Now.AddDays(30))
                     {
-                        var expAvailabilities = fareHarborSvc.GetExperienceAvailabilities(company.ShortName, companyExperience.Pk, targetDt);
+                        var expAvailabilities = fareHarborSvc.GetExperienceAvailabilities(co.ShortName, companyExperience.Pk, targetDt);
                         if (expAvailabilities.Any())
                         {
-                            //Check the experience duration, make sure its set
+                            // Check the experience duration, make sure its set
                             // use the first availablility as needed.
                             if (companyExperience.Duration == 0)
                             {
@@ -166,21 +191,25 @@ namespace TravelMinded.Service.DAL
                                 var dbAvailability = mapper.Map<DbModel.Availability>(fhExp);
                                 dbAvailability.Experience = companyExperience;
 
-                                tmContext.Availabilities.Add(dbAvailability);
+                                dbAvailList.Add(dbAvailability);
                             }
                         }
 
                         targetDt = targetDt.AddDays(1);
                     }
 
-                    recordsSaved += tmContext.SaveChanges();
 
-                }
-            }
+                });
+
+                tmContext.Availabilities.AddRange(dbAvailList);
+
+            });
+
+
+
+            recordsSaved += tmContext.SaveChanges();
 
             return recordsSaved;
-
         }
-
     }
 }
