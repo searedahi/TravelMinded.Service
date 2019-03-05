@@ -111,7 +111,7 @@ namespace TravelMinded.Service.DAL
 
             });
 
-                tmContext.Experiences.AddRange(dbList);
+            tmContext.Experiences.AddRange(dbList);
 
             //foreach (var company in companies)
             //{
@@ -152,11 +152,9 @@ namespace TravelMinded.Service.DAL
             var allExperiences = new List<IExperience>();
             var recordsSaved = 0;
 
-            Parallel.ForEach(companies, co =>
+            foreach (var company in companies)
             {
-                var companyContext = new TravelMindedContext();
-
-                var companyExperiences = companyContext.Experiences.Where(e => e.Company.Equals(co)).ToList();
+                var companyExperiences = tmContext.Experiences.Where(e => e.Company.Equals(company)).ToList();
 
                 var dbAvailList = new List<DbModel.Availability>();
 
@@ -168,9 +166,20 @@ namespace TravelMinded.Service.DAL
 
                     DateTime targetDt = DateTime.Now;
 
+                    var datesList = new List<DateTime>
+                    {
+                        targetDt
+                    };
+
                     while (targetDt < DateTime.Now.AddDays(30))
                     {
-                        var expAvailabilities = fareHarborSvc.GetExperienceAvailabilities(co.ShortName, companyExperience.Pk, targetDt);
+                        targetDt = targetDt.AddDays(1);
+                        datesList.Add(targetDt);
+                    }
+
+                    Parallel.ForEach(datesList, target =>
+                    {
+                        var expAvailabilities = fareHarborSvc.GetExperienceAvailabilities(company.ShortName, companyExperience.Pk, targetDt);
                         if (expAvailabilities.Any())
                         {
                             // Check the experience duration, make sure its set
@@ -194,16 +203,13 @@ namespace TravelMinded.Service.DAL
                                 dbAvailList.Add(dbAvailability);
                             }
                         }
-
-                        targetDt = targetDt.AddDays(1);
-                    }
-
+                    });
 
                 });
 
                 tmContext.Availabilities.AddRange(dbAvailList);
 
-            });
+            };
 
 
 
