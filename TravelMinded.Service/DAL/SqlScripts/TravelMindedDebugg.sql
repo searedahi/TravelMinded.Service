@@ -29,6 +29,8 @@ SELECT TOP 1000
 
 /*
 BEGIN TRAN
+	
+	DELETE FROM [TravelMinded].[dbo].[ProTips]	
 	DELETE FROM [TravelMinded].[dbo].[CustomerTypeRate]
 	DELETE FROM [TravelMinded].[dbo].[CustomerType]
 	DELETE FROM [TravelMinded].[dbo].[CustomerPrototype]
@@ -38,7 +40,9 @@ BEGIN TRAN
 	DELETE FROM [TravelMinded].[dbo].[Experiences]		
 	DELETE FROM [TravelMinded].[dbo].[Companies]
     DELETE FROM [TravelMinded].[dbo].[AddressInfo]
+	
 
+	DBCC CHECKIDENT ('[ProTips]', RESEED, 0);
 	DBCC CHECKIDENT ('[CustomerTypeRate]', RESEED, 0);
 	DBCC CHECKIDENT ('[CustomerType]', RESEED, 0);
 	DBCC CHECKIDENT ('[CustomerPrototype]', RESEED, 0);
@@ -48,6 +52,8 @@ BEGIN TRAN
 	DBCC CHECKIDENT ('[Experiences]', RESEED, 0);
 	DBCC CHECKIDENT ('[Companies]', RESEED, 0);
 	DBCC CHECKIDENT ('[AddressInfo]', RESEED, 0);
+
+
 ROLLBACK TRAN
 */
 
