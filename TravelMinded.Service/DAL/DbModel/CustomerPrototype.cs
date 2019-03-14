@@ -1,4 +1,6 @@
-﻿namespace TravelMinded.Service.DAL.DbModel
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TravelMinded.Service.DAL.DbModel
 {
     public class CustomerPrototype : BaseDbModel
     {
@@ -8,6 +10,7 @@
         public int Pk { get; set; }
         public string DisplayName { get; set; }
         public int Total { get; set; }
+        [NotMapped]
         public int TravelMindedCustomerTypeId { get; set; }
     }
 }

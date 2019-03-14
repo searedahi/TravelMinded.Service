@@ -14,7 +14,9 @@ namespace TravelMinded.Service
                 cfg.CreateMap<DAL.DbModel.Company, Company>();
                 cfg.CreateMap<List<DAL.DbModel.Experience>, List<Experience>>();
                 cfg.CreateMap<List<DAL.DbModel.Availability>, List<Availability>>();
-                cfg.CreateMap<DAL.DbModel.Experience, Experience>();
+                cfg.CreateMap<List<DAL.DbModel.CustomerPrototype>, List<CustomerPrototype>>();
+                cfg.CreateMap<DAL.DbModel.CustomerPrototype, CustomerPrototype>();
+                cfg.CreateMap<DAL.DbModel.Experience, Experience>();                
                 cfg.CreateMap<DAL.DbModel.Availability, Availability>();
             });
 
